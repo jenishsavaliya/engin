@@ -61,6 +61,17 @@ module.exports = (sequelize, DataType) => {
         },
       },
     },
+    installtionDate: {
+      type: DataType.STRING,
+      default: "NULL",
+      validate: {
+        isTypeMAtch(value) {
+          if (typeof value !== "string") {
+            throw new Error("installtionDate allowed only string");
+          }
+        },
+      },
+    },
     noOfVisits: {
       type: DataType.FLOAT,
       default: "NULL",
