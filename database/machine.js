@@ -72,6 +72,28 @@ module.exports = (sequelize, DataType) => {
         },
       },
     },
+    servicesDates: {
+      type: DataType.STRING,
+      default: "NULL",
+      validate: {
+        isTypeMAtch(value) {
+          if (typeof value !== "string") {
+            throw new Error("servicesDates allowed only string");
+          }
+        },
+      },
+    },
+    ServiceRepeatHours: {
+      type: DataType.STRING,
+      default: "NULL",
+      validate: {
+        isTypeMAtch(value) {
+          if (typeof value !== "string") {
+            throw new Error("ServiceRepeatHours allowed only string");
+          }
+        },
+      },
+    },
     noOfVisits: {
       type: DataType.FLOAT,
       default: "NULL",

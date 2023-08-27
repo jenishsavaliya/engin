@@ -3,6 +3,10 @@ const { customer, machine, engCard } = require("../database");
 module.exports = {
   create: async (req, res) => {
     try {
+      if (req.body.servicesDates) {
+        let servicesDates = JSON.stringify(req.body.servicesDates);
+        req.body.servicesDates = servicesDates;
+      }
       await machine
         .create(req.body)
         .then((data) => {
@@ -75,6 +79,10 @@ module.exports = {
   },
   update: async (req, res) => {
     try {
+      if (req.body.servicesDates) {
+        let servicesDates = JSON.stringify(req.body.servicesDates);
+        req.body.servicesDates = servicesDates;
+      }
       let { id } = req.params;
       let { body } = req;
       await machine
