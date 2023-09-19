@@ -1,4 +1,24 @@
 const { customer, machine, engCard } = require("../database");
+const { PDFDocument, rgb } = require("pdf-lib");
+const fs = require("fs");
+
+async function generatePDF() {
+  const pdfDoc = await PDFDocument.create();
+  const page = pdfDoc.addPage([600, 400]);
+
+  const imageBytes = fs.readFileSync("assets/logo.png");
+  const image = await pdfDoc.embedPng(imageBytes);
+  page.drawImage(image, {
+    x: 50,
+    y: 300,
+    width: 100,
+    height: 50,
+  });
+
+  const pdfBytes = await pdfDoc.save();
+
+  return pdfBytes;
+}
 
 module.exports = {
   create: async (req, res) => {
@@ -51,6 +71,19 @@ module.exports = {
             message: err.message,
           });
         });
+    } catch (err) {
+      res.status(500).json(err.message);
+    }
+  },
+  downloadPdf: async (req, res) => {
+    try {
+      const pdfBytes = await generatePDF();
+
+      // Set response headers for downloading the PDF
+      res.setHeader("Content-Type", "application/pdf");
+      res.setHeader("Content-Disposition", "attachment; filename=example.pdf");
+      console.log("pdfBytes", pdfBytes);
+      res.send(pdfBytes);
     } catch (err) {
       res.status(500).json(err.message);
     }

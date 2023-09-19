@@ -9,6 +9,7 @@ router.post(
   machineController.create
 );
 router.get("/machine", Middleware.protect, machineController.get);
+router.get("/download-pdf", Middleware.protect, machineController.downloadPdf);
 router.get(
   "/machine/:id",
   Middleware.protect,
