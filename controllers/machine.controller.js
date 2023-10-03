@@ -1,24 +1,4 @@
-const { customer, machine, engCard } = require("../database");
-const { PDFDocument, rgb } = require("pdf-lib");
-const fs = require("fs");
-
-async function generatePDF() {
-  const pdfDoc = await PDFDocument.create();
-  const page = pdfDoc.addPage([600, 400]);
-
-  const imageBytes = fs.readFileSync("assets/logo.png");
-  const image = await pdfDoc.embedPng(imageBytes);
-  page.drawImage(image, {
-    x: 50,
-    y: 300,
-    width: 100,
-    height: 50,
-  });
-
-  const pdfBytes = await pdfDoc.save();
-
-  return pdfBytes;
-}
+const { customer, machine, engCard, machineReport } = require("../database");
 
 module.exports = {
   create: async (req, res) => {
@@ -39,6 +19,29 @@ module.exports = {
           res.json({
             status: 200,
             message: "Machine created",
+          });
+        })
+        .catch((err) => {
+          res.json({
+            status: 500,
+            message: err.message,
+          });
+        });
+    } catch (err) {
+      res.status(500).json({
+        status: 500,
+        message: "something went wrong",
+      });
+    }
+  },
+  createReport: async (req, res) => {
+    try {
+      await machineReport
+        .create(req.body)
+        .then((data) => {
+          res.json({
+            status: 200,
+            message: "Machine Report created",
           });
         })
         .catch((err) => {
@@ -75,19 +78,6 @@ module.exports = {
       res.status(500).json(err.message);
     }
   },
-  downloadPdf: async (req, res) => {
-    try {
-      const pdfBytes = await generatePDF();
-
-      // Set response headers for downloading the PDF
-      res.setHeader("Content-Type", "application/pdf");
-      res.setHeader("Content-Disposition", "attachment; filename=example.pdf");
-      console.log("pdfBytes", pdfBytes);
-      res.send(pdfBytes);
-    } catch (err) {
-      res.status(500).json(err.message);
-    }
-  },
   getMachineByCustomer: async (req, res) => {
     try {
       let { id } = req.params;
@@ -98,6 +88,28 @@ module.exports = {
             status: 200,
             list: data,
             message: "Machine list data founded",
+          });
+        })
+        .catch((err) => {
+          res.json({
+            status: 500,
+            message: err.message,
+          });
+        });
+    } catch (err) {
+      res.status(500).json(err.message);
+    }
+  },
+  getMachineReportById: async (req, res) => {
+    try {
+      let { id } = req.params;
+      await machineReport
+        .findAll({ where: { id: id } })
+        .then((data) => {
+          res.json({
+            status: 200,
+            list: data,
+            message: "Machine report data",
           });
         })
         .catch((err) => {
@@ -130,6 +142,31 @@ module.exports = {
               message: "Machine detail updated",
             });
           }
+        })
+        .catch((err) => {
+          res.json({
+            status: 500,
+            message: err.message,
+          });
+        });
+    } catch (err) {
+      res.status(500).json({
+        status: 500,
+        message: "something went wrong",
+      });
+    }
+  },
+  updateReport: async (req, res) => {
+    try {
+      let { id } = req.params;
+      let { body } = req;
+      await machineReport
+        .update(body, { where: { id: id } })
+        .then(() => {
+          res.json({
+            status: 200,
+            message: "Machine report updated",
+          });
         })
         .catch((err) => {
           res.json({

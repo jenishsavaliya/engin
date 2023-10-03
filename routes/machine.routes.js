@@ -8,19 +8,28 @@ router.post(
   [Middleware.protect, Middleware.role],
   machineController.create
 );
+router.post(
+  "/machine-report",
+  Middleware.protect,
+  machineController.createReport
+);
 router.get("/machine", Middleware.protect, machineController.get);
-router.get("/download-pdf", Middleware.protect, machineController.downloadPdf);
 router.get(
   "/machine/:id",
   Middleware.protect,
   machineController.getMachineByCustomer
 );
-router.put("/machine/:id", Middleware.protect, machineController.update);
-router.delete("/machine/:id", Middleware.protect, machineController.delete);
-router.delete(
-  "/engCard/:id",
+router.get(
+  "/machine-report/:id",
   Middleware.protect,
-  machineController.deleteEngCard
+  machineController.getMachineReportById
 );
+router.put("/machine/:id", Middleware.protect, machineController.update);
+router.put(
+  "/machine-report/:id",
+  Middleware.protect,
+  machineController.updateReport
+);
+router.delete("/machine/:id", Middleware.protect, machineController.delete);
 
 module.exports = router;
