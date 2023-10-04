@@ -24,6 +24,11 @@ router.get(
   Middleware.protect,
   machineController.getMachineReportById
 );
+router.get(
+  "/machine-report",
+  Middleware.protect,
+  machineController.getMachineReports
+);
 router.put("/machine/:id", Middleware.protect, machineController.update);
 router.put(
   "/machine-report/:id",

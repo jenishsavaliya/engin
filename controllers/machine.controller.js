@@ -122,6 +122,27 @@ module.exports = {
       res.status(500).json(err.message);
     }
   },
+  getMachineReports: async (req, res) => {
+    try {
+      await machineReport
+        .findAll()
+        .then((data) => {
+          res.json({
+            status: 200,
+            list: data,
+            message: "Machine report data",
+          });
+        })
+        .catch((err) => {
+          res.json({
+            status: 500,
+            message: err.message,
+          });
+        });
+    } catch (err) {
+      res.status(500).json(err.message);
+    }
+  },
   update: async (req, res) => {
     try {
       if (req.body.servicesDates) {
