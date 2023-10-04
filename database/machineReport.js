@@ -28,7 +28,7 @@ module.exports = (sequelize, DataType) => {
         },
       },
     },
-    equipmentNamer: {
+    equipmentName: {
       type: DataType.STRING,
       default: "NULL",
       validate: {
