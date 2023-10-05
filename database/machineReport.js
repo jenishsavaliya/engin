@@ -732,7 +732,7 @@ module.exports = (sequelize, DataType) => {
         },
       },
     },
-    eelectric_battery_sulphatation_reason: {
+    electric_battery_sulphatation_reason: {
       type: DataType.TEXT,
       default: "NULL",
       validate: {
