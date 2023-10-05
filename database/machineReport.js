@@ -743,6 +743,17 @@ module.exports = (sequelize, DataType) => {
         },
       },
     },
+    operatorName: {
+      type: DataType.TEXT,
+      default: "NULL",
+      validate: {
+        isTypeMAtch(value) {
+          if (typeof value !== "string") {
+            throw new Error("allowed only string");
+          }
+        },
+      },
+    },
     diesel_general_colling_fan_belt: {
       type: DataType.TEXT,
       default: "NULL",
