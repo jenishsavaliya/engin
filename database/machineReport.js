@@ -6,7 +6,7 @@ module.exports = (sequelize, DataType) => {
       allowNull: false,
       primaryKey: true,
     },
-    customer_name: {
+    companyName: {
       type: DataType.STRING,
       default: "NULL",
       validate: {
@@ -17,7 +17,7 @@ module.exports = (sequelize, DataType) => {
         },
       },
     },
-    sr_number: {
+    equipmentSrNumber: {
       type: DataType.STRING,
       default: "NULL",
       validate: {
