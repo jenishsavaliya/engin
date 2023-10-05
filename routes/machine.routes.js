@@ -36,5 +36,10 @@ router.put(
   machineController.updateReport
 );
 router.delete("/machine/:id", Middleware.protect, machineController.delete);
+router.delete(
+  "/machine-report/:id",
+  Middleware.protect,
+  machineController.deleteReport
+);
 
 module.exports = router;

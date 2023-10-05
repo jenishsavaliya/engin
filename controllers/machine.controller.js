@@ -222,6 +222,26 @@ module.exports = {
       res.status(500).json(err.message);
     }
   },
+  deleteReport: async (req, res) => {
+    try {
+      await machineReport
+        .destroy({ where: { id: req.params.id } })
+        .then(() => {
+          res.json({
+            status: 200,
+            message: "Machine report deleted",
+          });
+        })
+        .catch((err) => {
+          res.json({
+            status: 500,
+            message: err.message,
+          });
+        });
+    } catch (err) {
+      res.status(500).json(err.message);
+    }
+  },
   deleteEngCard: async (req, res) => {
     try {
       await engCard
