@@ -17,6 +17,17 @@ module.exports = (sequelize, DataType) => {
         },
       },
     },
+    operatorName: {
+      type: DataType.STRING,
+      default: "NULL",
+      validate: {
+        isTypeMAtch(value) {
+          if (typeof value !== "string") {
+            throw new Error("equipmentName allowed only string");
+          }
+        },
+      },
+    },
     equipmentType: {
       type: DataType.STRING,
       default: "NULL",
