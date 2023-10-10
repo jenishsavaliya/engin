@@ -108,6 +108,17 @@ module.exports = (sequelize, DataType) => {
         },
       },
     },
+    password: {
+      type: DataType.STRING,
+      default: "NULL",
+      validate: {
+        isTypeMAtch(value) {
+          if (typeof value !== "string") {
+            throw new Error("password allowed only string");
+          }
+        },
+      },
+    },
   });
   return Customer;
 };

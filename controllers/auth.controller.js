@@ -1,4 +1,4 @@
-const { admin } = require("../database");
+const { admin, customer } = require("../database");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const soltRound = 10;
@@ -10,9 +10,16 @@ module.exports = {
     let body = req;
     try {
       if (body && body.email && body.password && body.role) {
-        let existingUser = await admin.findOne({
-          where: { email: body.email },
-        });
+        let existingUser;
+        if (body.role === "customer") {
+          existingUser = await customer.findOne({
+            where: { connectEmail: body.email },
+          });
+        } else {
+          existingUser = await admin.findOne({
+            where: { email: body.email },
+          });
+        }
         if (existingUser) {
           if (existingUser.role !== body.role) {
             return {

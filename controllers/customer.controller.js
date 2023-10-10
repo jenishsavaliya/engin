@@ -3,6 +3,14 @@ const { customer, admin } = require("../database");
 module.exports = {
   create: async (req, res) => {
     try {
+      let password = await new Promise((resolve, reject) => {
+        bcrypt.genSalt(soltRound, function (err, salt) {
+          bcrypt.hash(req.body.password, salt, function (err, hash) {
+            resolve(hash);
+          });
+        });
+      });
+      req.body.password = password;
       await customer
         .create(req.body)
         .then(() => {
