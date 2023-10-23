@@ -38,7 +38,7 @@ module.exports = {
     }
   },
   role: async (req, res, next) => {
-    if (req.user.data.role === "admin") {
+    if (req.user.data.role) {
       next();
     } else {
       return res.status(401).json({
