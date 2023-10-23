@@ -8,6 +8,7 @@ const SECRET_KEY =
 module.exports = {
   login: async (req) => {
     let body = req;
+    console.log("sasasasas", body);
     try {
       if (body && body.email && body.password && body.role) {
         let existingUser;
@@ -15,6 +16,7 @@ module.exports = {
           existingUser = await customer.findOne({
             where: { connectEmail: body.email },
           });
+          existingUser.role = "customer";
         } else {
           existingUser = await admin.findOne({
             where: { email: body.email },
@@ -76,6 +78,7 @@ module.exports = {
         };
       }
     } catch (err) {
+      console.log("wewewweewe", err);
       res.json({
         status: 500,
         message: err.message,
