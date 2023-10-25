@@ -178,7 +178,11 @@ module.exports = {
         .then(() => {
           if (body && body.cards.length > 0) {
             body.cards.map(async (card) => {
-              await engCard.update(card, { where: { id: card.id } });
+              if (card.id) {
+                await engCard.update(card, { where: { id: card.id } });
+              } else {
+                await engCard.create(card);
+              }
             });
             res.json({
               status: 200,
