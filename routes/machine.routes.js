@@ -20,6 +20,11 @@ router.get(
   machineController.getMachineByCustomer
 );
 router.get(
+  "/machine-by-id/:id",
+  Middleware.protect,
+  machineController.getMachineByID
+);
+router.get(
   "/machine-report/:id",
   Middleware.protect,
   machineController.getMachineReportById

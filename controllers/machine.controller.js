@@ -100,11 +100,33 @@ module.exports = {
       res.status(500).json(err.message);
     }
   },
+  getMachineByID: async (req, res) => {
+    try {
+      let { id } = req.params;
+      await machine
+        .findAll({ where: { customerId: id }, include: [customer, engCard] })
+        .then((data) => {
+          res.json({
+            status: 200,
+            list: data,
+            message: "Machine list data founded",
+          });
+        })
+        .catch((err) => {
+          res.json({
+            status: 500,
+            message: err.message,
+          });
+        });
+    } catch (err) {
+      res.status(500).json(err.message);
+    }
+  },
   getMachineReportById: async (req, res) => {
     try {
       let { id } = req.params;
-      await machineReport
-        .findAll({ where: { id: id } })
+      await machine
+        .findAll({ where: { id: id }, include: [engCard] })
         .then((data) => {
           res.json({
             status: 200,
