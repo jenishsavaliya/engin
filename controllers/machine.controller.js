@@ -104,12 +104,11 @@ module.exports = {
     try {
       let { id } = req.params;
       await machine
-        .findAll({ where: { customerId: id }, include: [customer, engCard] })
+        .findAll({ where: { id: id }, include: [engCard] })
         .then((data) => {
           res.json({
             status: 200,
-            list: data,
-            message: "Machine list data founded",
+            data,
           });
         })
         .catch((err) => {
@@ -125,8 +124,8 @@ module.exports = {
   getMachineReportById: async (req, res) => {
     try {
       let { id } = req.params;
-      await machine
-        .findAll({ where: { id: id }, include: [engCard] })
+      await machineReport
+        .findAll({ where: { id: id } })
         .then((data) => {
           res.json({
             status: 200,
