@@ -181,6 +181,7 @@ module.exports = {
               if (card.id) {
                 await engCard.update(card, { where: { id: card.id } });
               } else {
+                card.machineId = id;
                 await engCard.create(card);
               }
             });
