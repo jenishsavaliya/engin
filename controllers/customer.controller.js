@@ -4,7 +4,6 @@ const soltRound = 10;
 
 module.exports = {
   create: async (req, res) => {
-    console.log("dffereerere", req.body);
     try {
       let password = await new Promise((resolve, reject) => {
         bcrypt.genSalt(soltRound, function (err, salt) {
@@ -29,7 +28,6 @@ module.exports = {
           });
         });
     } catch (err) {
-      console.log("wewewewew", err);
       res.status(500).json({
         status: 500,
         message: "something went wrong",

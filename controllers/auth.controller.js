@@ -8,7 +8,6 @@ const SECRET_KEY =
 module.exports = {
   login: async (req) => {
     let body = req;
-    console.log("sasasasas", body);
     try {
       if (body && body.email && body.password && body.role) {
         let existingUser;
@@ -78,7 +77,6 @@ module.exports = {
         };
       }
     } catch (err) {
-      console.log("wewewweewe", err);
       res.json({
         status: 500,
         message: err.message,

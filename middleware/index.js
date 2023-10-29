@@ -1,6 +1,6 @@
 const { promisify } = require("util");
 const jwt = require("jsonwebtoken");
-const { admin } = require("../database");
+const { admin, customer } = require("../database");
 
 module.exports = {
   protect: async (req, res, next) => {
@@ -23,10 +23,19 @@ module.exports = {
           message: "Unauthorized! JWT Token expired",
         });
       } else {
-        const adminData = await admin.findOne({
-          where: { email: decode.data.email },
-        });
-        decode.data.role = adminData.role;
+        let adminData;
+        if (decode.data.email) {
+          adminData = await admin.findOne({
+            where: { email: decode.data.email },
+          });
+          decode.data.role = adminData.role;
+        } else {
+          adminData = await customer.findOne({
+            where: { id: decode.data.id },
+          });
+          decode.data.email = adminData.connectEmail;
+          decode.data.role = "customer";
+        }
         req.user = decode;
         next();
       }
