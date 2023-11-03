@@ -42,5 +42,6 @@ app.use("/api", require("./routes/user.routes"));
 app.use("/api", require("./routes/customer.routes"));
 app.use("/api", require("./routes/machine.routes"));
 app.use("/api", require("./routes/engCards.routes"));
+app.use("/api", require("./routes/machineComplain.routes"));
 
 app.listen(port, () => console.log("Listening on port " + port));
