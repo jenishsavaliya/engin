@@ -12,13 +12,15 @@ module.exports = {
       await machineComplain
         .create(req.body)
         .then((data) => {
-          req.files.map(async (file) => {
-            await uploadDoc.create({
-              name: file.originalname,
-              path: file.path,
-              machineComplainId: data.dataValues.id,
+          if (req.files.length !== 0) {
+            req.files.map(async (file) => {
+              await uploadDoc.create({
+                name: file.originalname,
+                path: file.path,
+                machineComplainId: data.dataValues.id,
+              });
             });
-          });
+          }
           res.json({
             status: 200,
             message: "Machine Complain created",
