@@ -14,7 +14,7 @@ router.get(
   machineComplainController.get
 );
 router.put(
-  "/machine-complain",
+  "/machine-complain/:id",
   Middleware.protect,
   machineComplainController.update
 );
