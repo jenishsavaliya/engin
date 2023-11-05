@@ -19,6 +19,64 @@ module.exports = {
                 path: file.path,
                 machineComplainId: data.dataValues.id,
               });
+
+              const storage = multer.diskStorage({
+                destination: (req, file, cb) => {
+                  cb(null, __dirname.replace("/uploads", ""));
+                },
+                filename: (req, file, cb) => {
+                  const pathName =
+                    "/uploads" + new Date().toISOString() + file.originalname;
+                  cb(null, pathName);
+                },
+              });
+
+              const upload = multer({
+                storage: storage,
+              }).array("images");
+
+              upload(req, res, async function (err) {
+                if (err) {
+                  res.status(500).json(err.message);
+                } else {
+                  const uploadedFiles = req.files;
+
+                  const uploadPromises = uploadedFiles.map(async (file) => {
+                    try {
+                      await uploadDoc.create({
+                        name: file.originalname,
+                        path: file.path,
+                        machineComplainId: data.dataValues.id,
+                      });
+                    } catch (err) {
+                      return err.message;
+                    }
+                  });
+
+                  Promise.all(uploadPromises)
+                    .then((results) => {
+                      const successUploads = results.filter(
+                        (result) => typeof result !== "string"
+                      );
+                      const failedUploads = results.filter(
+                        (result) => typeof result === "string"
+                      );
+
+                      res.status(200).json({
+                        status: 200,
+                        message: "Documents uploaded",
+                        successfulUploads: successUploads,
+                        failedUploads: failedUploads,
+                      });
+                    })
+                    .catch((err) => {
+                      res.status(500).json({
+                        status: 500,
+                        message: err.message,
+                      });
+                    });
+                }
+              });
             });
           }
           res.json({

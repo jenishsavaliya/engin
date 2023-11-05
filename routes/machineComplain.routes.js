@@ -2,12 +2,10 @@ const express = require("express");
 const router = express.Router();
 const Middleware = require("../middleware/");
 const machineComplainController = require("../controllers/machineComplain.controller");
-const multer = require("multer");
-const upload = multer({ dest: "uploads/" });
 
 router.post(
   "/machine-complain",
-  [Middleware.protect, Middleware.role, upload.array("images", 5)],
+  [Middleware.protect, Middleware.role],
   machineComplainController.create
 );
 router.get(
