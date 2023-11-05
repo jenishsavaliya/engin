@@ -48,7 +48,7 @@ module.exports = {
   getByMachine: async (req, res) => {
     try {
       await dailyCheckout
-        .findOne({ where: { machineId: req.params.id }, include: [machine] })
+        .findOne({ where: { customerId: req.params.id }, include: [machine] })
         .then((data) => {
           res.json({
             status: 200,
