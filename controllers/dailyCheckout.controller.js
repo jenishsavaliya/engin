@@ -1,4 +1,4 @@
-const { dailyCheckout, machine } = require("../database");
+const { dailyCheckout, machine, customer } = require("../database");
 
 module.exports = {
   create: async (req, res) => {
@@ -48,11 +48,14 @@ module.exports = {
   getByMachine: async (req, res) => {
     try {
       await dailyCheckout
-        .findOne({ where: { customerId: req.params.id }, include: [machine] })
+        .findAll({
+          where: { customerId: req.params.id },
+          include: [machine, customer],
+        })
         .then((data) => {
           res.json({
             status: 200,
-            data: data,
+            list: data,
             message: "Checkout data founded",
           });
         })
