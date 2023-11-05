@@ -37,6 +37,7 @@ db.engCard = require("./engCard.js")(sequelize, DataTypes);
 db.machineReport = require("./machineReport.js")(sequelize, DataTypes);
 db.machineComplain = require("./machineComplain.js")(sequelize, DataTypes);
 db.uploadDoc = require("./uploadDoc.js")(sequelize, DataTypes);
+db.dailyAttendance = require("./dailyAttendance.js")(sequelize, DataTypes);
 
 db.admin.hasMany(db.customer, { onDelete: "cascade" });
 db.customer.belongsTo(db.admin);
@@ -57,6 +58,9 @@ db.machineComplain.belongsTo(db.customer);
 
 db.machineComplain.hasMany(db.uploadDoc, { onDelete: "cascade" });
 db.uploadDoc.belongsTo(db.machineComplain);
+
+db.admin.hasMany(db.dailyAttendance, { onDelete: "cascade" });
+db.dailyAttendance.belongsTo(db.admin);
 
 db.sequelize.sync({ force: false }).then(async () => {
   const record = await db.admin.findAndCountAll();
