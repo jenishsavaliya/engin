@@ -153,7 +153,7 @@ module.exports = {
         .then((data) => {
           res.json({
             status: 200,
-            data: data,
+            list: data,
           });
         })
         .catch((err) => {
