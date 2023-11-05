@@ -38,6 +38,7 @@ db.machineReport = require("./machineReport.js")(sequelize, DataTypes);
 db.machineComplain = require("./machineComplain.js")(sequelize, DataTypes);
 db.uploadDoc = require("./uploadDoc.js")(sequelize, DataTypes);
 db.dailyAttendance = require("./dailyAttendance.js")(sequelize, DataTypes);
+db.dailyCheckout = require("./dailyCheckout.js")(sequelize, DataTypes);
 
 db.admin.hasMany(db.customer, { onDelete: "cascade" });
 db.customer.belongsTo(db.admin);
@@ -55,6 +56,11 @@ db.machine.hasMany(db.machineComplain, { onDelete: "cascade" });
 db.machineComplain.belongsTo(db.machine);
 db.customer.hasMany(db.machineComplain, { onDelete: "cascade" });
 db.machineComplain.belongsTo(db.customer);
+
+db.machine.hasMany(db.dailyCheckout, { onDelete: "cascade" });
+db.dailyCheckout.belongsTo(db.machine);
+db.customer.hasMany(db.dailyCheckout, { onDelete: "cascade" });
+db.dailyCheckout.belongsTo(db.customer);
 
 db.machineComplain.hasMany(db.uploadDoc, { onDelete: "cascade" });
 db.uploadDoc.belongsTo(db.machineComplain);
