@@ -5,87 +5,80 @@ const {
   uploadDoc,
 } = require("../database");
 const fs = require("fs");
+const multer = require("multer");
 
 module.exports = {
   create: async (req, res) => {
     try {
       await machineComplain
         .create(req.body)
-        .then((data) => {
-          if (req.files.length !== 0) {
-            req.files.map(async (file) => {
-              await uploadDoc.create({
-                name: file.originalname,
-                path: file.path,
-                machineComplainId: data.dataValues.id,
-              });
+        .then(async (data) => {
+          const images = req.body.images;
 
-              const storage = multer.diskStorage({
-                destination: (req, file, cb) => {
-                  cb(null, __dirname.replace("/uploads", ""));
-                },
-                filename: (req, file, cb) => {
-                  const pathName =
-                    "/uploads" + new Date().toISOString() + file.originalname;
-                  cb(null, pathName);
-                },
-              });
+          if (images && Array.isArray(images)) {
+            const uploadPromises = images.map(async (base64Image, index) => {
+              try {
+                if (
+                  typeof base64Image === "string" &&
+                  base64Image.match(/^data:image\/[a-z]+;base64,/)
+                ) {
+                  // Decode and save the base64 image
+                  const imageBuffer = Buffer.from(
+                    base64Image.replace(/^data:image\/[a-z]+;base64,/, ""),
+                    "base64"
+                  );
+                  const fileName = `image_${index + 1}.jpg`; // You can generate unique file names
+                  const filePath = path.join(
+                    __dirname.replace("/uploads", ""),
+                    fileName
+                  );
+                  fs.writeFileSync(filePath, imageBuffer);
 
-              const upload = multer({
-                storage: storage,
-              }).array("images");
-
-              upload(req, res, async function (err) {
-                if (err) {
-                  res.status(500).json(err.message);
-                } else {
-                  const uploadedFiles = req.files;
-
-                  const uploadPromises = uploadedFiles.map(async (file) => {
-                    try {
-                      await uploadDoc.create({
-                        name: file.originalname,
-                        path: file.path,
-                        machineComplainId: data.dataValues.id,
-                      });
-                    } catch (err) {
-                      return err.message;
-                    }
+                  // Create a record in the database
+                  await uploadDoc.create({
+                    name: fileName,
+                    path: filePath,
+                    machineComplainId: data.dataValues.id,
                   });
-
-                  Promise.all(uploadPromises)
-                    .then((results) => {
-                      const successUploads = results.filter(
-                        (result) => typeof result !== "string"
-                      );
-                      const failedUploads = results.filter(
-                        (result) => typeof result === "string"
-                      );
-
-                      res.status(200).json({
-                        status: 200,
-                        message: "Documents uploaded",
-                        successfulUploads: successUploads,
-                        failedUploads: failedUploads,
-                      });
-                    })
-                    .catch((err) => {
-                      res.status(500).json({
-                        status: 500,
-                        message: err.message,
-                      });
-                    });
+                } else {
+                  return "Invalid base64 image data";
                 }
+              } catch (err) {
+                return err.message;
+              }
+            });
+
+            Promise.all(uploadPromises)
+              .then((results) => {
+                const successUploads = results.filter(
+                  (result) => typeof result !== "string"
+                );
+                const failedUploads = results.filter(
+                  (result) => typeof result === "string"
+                );
+
+                res.status(200).json({
+                  status: 200,
+                  message: "Images uploaded",
+                  successfulUploads: successUploads,
+                  failedUploads: failedUploads,
+                });
+              })
+              .catch((err) => {
+                res.status(500).json({
+                  status: 500,
+                  message: err.message,
+                });
               });
+          } else {
+            res.status(200).json({
+              status: 200,
+              message: "No images provided",
             });
           }
-          res.json({
-            status: 200,
-            message: "Machine Complain created",
-          });
         })
         .catch((err) => {
-          res.json({
+          res.status(500).json({
             status: 500,
             message: err.message,
           });
@@ -93,11 +86,10 @@ module.exports = {
     } catch (err) {
       res.status(500).json({
         status: 500,
-        message: "something went wrong",
+        message: "Something went wrong",
       });
     }
   },
-
   get: async (req, res) => {
     try {
       await machineComplain
