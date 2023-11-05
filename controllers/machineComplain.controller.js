@@ -118,7 +118,30 @@ module.exports = {
       res.status(500).json(err.message);
     }
   },
-
+  update: async (req, res) => {
+    try {
+      let { id } = req.params;
+      await machineComplain
+        .update(req.body, { where: { id: id } })
+        .then(() => {
+          res.json({
+            status: 200,
+            message: "Machine complain detail updated",
+          });
+        })
+        .catch((err) => {
+          res.json({
+            status: 500,
+            message: err.message,
+          });
+        });
+    } catch (err) {
+      res.status(500).json({
+        status: 500,
+        message: "something went wrong",
+      });
+    }
+  },
   getComplainByCustomer: async (req, res) => {
     try {
       let { id } = req.params;

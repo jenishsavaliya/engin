@@ -13,6 +13,11 @@ router.get(
   Middleware.protect,
   machineComplainController.get
 );
+router.put(
+  "/machine-complain",
+  Middleware.protect,
+  machineComplainController.update
+);
 router.get(
   "/complain-by-customer/:id",
   Middleware.protect,
