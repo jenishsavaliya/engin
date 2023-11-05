@@ -6,6 +6,7 @@ const {
 } = require("../database");
 const fs = require("fs");
 const multer = require("multer");
+const path = require("path");
 
 module.exports = {
   create: async (req, res) => {
@@ -19,22 +20,33 @@ module.exports = {
             const uploadPromises = images.map(async (base64Image, index) => {
               try {
                 if (
-                  typeof base64Image === "string" &&
-                  base64Image.match(/^data:image\/[a-z]+;base64,/)
+                  typeof base64Image.base64 === "string" &&
+                  base64Image.base64.match(/^data:image\/[a-z]+;base64,/)
                 ) {
-                  // Decode and save the base64 image
                   const imageBuffer = Buffer.from(
-                    base64Image.replace(/^data:image\/[a-z]+;base64,/, ""),
+                    base64Image.base64.replace(
+                      /^data:image\/[a-z]+;base64,/,
+                      ""
+                    ),
                     "base64"
                   );
-                  const fileName = `image_${index + 1}.jpg`; // You can generate unique file names
-                  const filePath = path.join(
-                    __dirname.replace("/uploads", ""),
-                    fileName
+                  const fileName = `uploads/${new Date().toISOString()}${
+                    base64Image.name
+                  }`;
+                  const absolutePath = path.join(
+                    __dirname.replace("controllers", ""),
+                    "uploads"
                   );
+                  if (!fs.existsSync(absolutePath)) {
+                    fs.mkdirSync(absolutePath, { recursive: true });
+                  }
+                  const filePath = path.join(
+                    absolutePath,
+                    fileName.replace("uploads/", "")
+                  );
+
                   fs.writeFileSync(filePath, imageBuffer);
 
-                  // Create a record in the database
                   await uploadDoc.create({
                     name: fileName,
                     path: filePath,
@@ -70,11 +82,6 @@ module.exports = {
                   message: err.message,
                 });
               });
-          } else {
-            res.status(200).json({
-              status: 200,
-              message: "No images provided",
-            });
           }
         })
         .catch((err) => {
