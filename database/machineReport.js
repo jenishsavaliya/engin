@@ -150,7 +150,7 @@ module.exports = (sequelize, DataType) => {
       },
     },
     signature: {
-      type: DataType.STRING,
+      type: DataType.TEXT,
       default: "NULL",
       validate: {
         isTypeMAtch(value) {
