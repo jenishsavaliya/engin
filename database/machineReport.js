@@ -149,6 +149,28 @@ module.exports = (sequelize, DataType) => {
         },
       },
     },
+    signature: {
+      type: DataType.STRING,
+      default: "NULL",
+      validate: {
+        isTypeMAtch(value) {
+          if (typeof value !== "string") {
+            throw new Error("allowed only string");
+          }
+        },
+      },
+    },
+    customer_feedback: {
+      type: DataType.STRING,
+      default: "NULL",
+      validate: {
+        isTypeMAtch(value) {
+          if (typeof value !== "string") {
+            throw new Error("allowed only string");
+          }
+        },
+      },
+    },
     diesel_operational_accelerator_braking_system: {
       type: DataType.TEXT,
       default: "NULL",
