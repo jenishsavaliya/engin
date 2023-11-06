@@ -18,7 +18,8 @@ module.exports = (sequelize, DataType) => {
       },
     },
     path: {
-      type: DataType.STRING,
+      type: DataType.TEXT("long"),
+      length: 255,
       default: "NULL",
       validate: {
         isTypeMAtch(value) {

@@ -14,75 +14,18 @@ module.exports = {
       await machineComplain
         .create(req.body)
         .then(async (data) => {
-          const images = req.body.images;
-
-          if (images && Array.isArray(images)) {
-            const uploadPromises = images.map(async (base64Image, index) => {
-              try {
-                if (
-                  typeof base64Image.base64 === "string" &&
-                  base64Image.base64.match(/^data:image\/[a-z]+;base64,/)
-                ) {
-                  const imageBuffer = Buffer.from(
-                    base64Image.base64.replace(
-                      /^data:image\/[a-z]+;base64,/,
-                      ""
-                    ),
-                    "base64"
-                  );
-                  const fileName = `uploads/${new Date().toISOString()}${
-                    base64Image.name
-                  }`;
-                  const absolutePath = path.join(
-                    __dirname.replace("controllers", ""),
-                    "uploads"
-                  );
-                  if (!fs.existsSync(absolutePath)) {
-                    fs.mkdirSync(absolutePath, { recursive: true });
-                  }
-                  const filePath = path.join(
-                    absolutePath,
-                    fileName.replace("uploads/", "")
-                  );
-
-                  fs.writeFileSync(filePath, imageBuffer);
-
-                  await uploadDoc.create({
-                    name: fileName,
-                    path: filePath,
-                    machineComplainId: data.dataValues.id,
-                  });
-                } else {
-                  return "Invalid base64 image data";
-                }
-              } catch (err) {
-                return err.message;
-              }
-            });
-
-            Promise.all(uploadPromises)
-              .then((results) => {
-                const successUploads = results.filter(
-                  (result) => typeof result !== "string"
-                );
-                const failedUploads = results.filter(
-                  (result) => typeof result === "string"
-                );
-
-                res.status(200).json({
-                  status: 200,
-                  message: "Images uploaded",
-                  successfulUploads: successUploads,
-                  failedUploads: failedUploads,
-                });
-              })
-              .catch((err) => {
-                res.status(500).json({
-                  status: 500,
-                  message: err.message,
-                });
+          req.body.images &&
+            req.body.images.map(async (item) => {
+              await uploadDoc.create({
+                name: item.name,
+                path: item.base64,
+                machineComplainId: data.dataValues.id,
               });
-          }
+            });
+          res.json({
+            status: 200,
+            message: "Machine compalain created",
+          });
         })
         .catch((err) => {
           res.status(500).json({
