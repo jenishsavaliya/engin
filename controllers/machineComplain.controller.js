@@ -67,6 +67,16 @@ module.exports = {
       await machineComplain
         .update(req.body, { where: { id: id } })
         .then(() => {
+          req.body.images &&
+            req.body.images.map(async (item) => {
+              if (!item.id) {
+                await uploadDoc.create({
+                  name: item.name,
+                  path: item.base64,
+                  machineComplainId: id,
+                });
+              }
+            });
           res.json({
             status: 200,
             message: "Machine complain detail updated",
