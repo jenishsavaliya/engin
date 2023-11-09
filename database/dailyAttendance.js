@@ -105,7 +105,7 @@ module.exports = (sequelize, DataType) => {
         },
       },
     },
-    status: {
+    verification: {
       type: DataType.STRING,
       default: "NULL",
       validate: {
