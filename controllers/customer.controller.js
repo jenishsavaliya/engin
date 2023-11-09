@@ -5,6 +5,7 @@ const soltRound = 10;
 module.exports = {
   create: async (req, res) => {
     try {
+      req.body.password = req.body.password;
       let password = await new Promise((resolve, reject) => {
         bcrypt.genSalt(soltRound, function (err, salt) {
           bcrypt.hash(req.body.password, salt, function (err, hash) {

@@ -11,6 +11,11 @@ router.get(
   dailyAttendace.getByUser
 );
 router.put("/attendace/:id", Middleware.protect, dailyAttendace.update);
+router.patch(
+  "/update-status/:id",
+  Middleware.protect,
+  dailyAttendace.updateStatus
+);
 router.delete("/attendace/:id", Middleware.protect, dailyAttendace.delete);
 
 module.exports = router;

@@ -479,6 +479,28 @@ module.exports = (sequelize, DataType) => {
         },
       },
     },
+    customer_headlight_taillight_indicator_light: {
+      type: DataType.STRING,
+      default: "NULL",
+      validate: {
+        isTypeMAtch(value) {
+          if (typeof value !== "string") {
+            throw new Error("allowed only string");
+          }
+        },
+      },
+    },
+    customer_differential_gear_assembly: {
+      type: DataType.STRING,
+      default: "NULL",
+      validate: {
+        isTypeMAtch(value) {
+          if (typeof value !== "string") {
+            throw new Error("allowed only string");
+          }
+        },
+      },
+    },
   });
   return dailyCheckout;
 };

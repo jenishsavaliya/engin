@@ -105,6 +105,17 @@ module.exports = (sequelize, DataType) => {
         },
       },
     },
+    status: {
+      type: DataType.STRING,
+      default: "NULL",
+      validate: {
+        isTypeMAtch(value) {
+          if (typeof value !== "string") {
+            throw new Error("allowed only string");
+          }
+        },
+      },
+    },
     kmstartimage: {
       type: DataType.TEXT("long"),
       default: "NULL",
